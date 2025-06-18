@@ -269,11 +269,9 @@ ensure_binary(Value) when is_atom(Value) -> atom_to_binary(Value, utf8).
 %% Parse boolean from environment variable.
 parse_boolean_env(EnvVar, Default) ->
     case os:getenv(EnvVar) of
-        false -> Default;
         "true" -> true;
-        "false" -> false;
         "1" -> true;
-        "0" -> false;
+        true -> true;
         _ -> Default
     end.
 
