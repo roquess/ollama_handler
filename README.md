@@ -21,14 +21,6 @@ Add `ollama_handler` to your `rebar.config` dependencies:
 
 ```erlang
 {deps, [
-    {ollama_handler, {git, "https://github.com/your-username/ollama_handler.git", {branch, "main"}}}
-]}.
-```
-
-Or if published to hex.pm:
-
-```erlang
-{deps, [
     {ollama_handler, "1.0.0"}
 ]}.
 ```
