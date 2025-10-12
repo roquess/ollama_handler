@@ -3,6 +3,7 @@
 %% Generic library to interact with Ollama API in a simple and flexible way.
 %% Supports both default configuration and custom configuration per request.
 %% Environment variables can be used to override default settings.
+%% Uses jsone for JSON encoding/decoding and wade for HTTP requests.
 
 -module(ollama_handler).
 -author("Steve Roques").
@@ -192,24 +193,31 @@ format_prompt(Template, Args) ->
 %% Private functions
 %% =============================================================================
 
-%% Make HTTP POST request to Ollama API.
+%% Make HTTP POST request to Ollama API using wade.
 make_ollama_request(Endpoint, Payload) ->
-    application:start(inets),
-    JsonPayload = jsx:encode(Payload),
-    Headers = [{"Content-Type", "application/json"}],
-    case httpc:request(post, {Endpoint, Headers, "application/json", JsonPayload}, [], []) of
-        {ok, {{_Version, 200, _ReasonPhrase}, _Headers, Body}} ->
-            parse_ollama_response(Body);
-        {ok, {{_Version, StatusCode, _ReasonPhrase}, _Headers, Body}} ->
-            {error, {ollama_error, StatusCode, Body}};
-        {error, Reason} ->
-            {error, {request_failed, Reason}}
+    try
+        JsonPayload = jsone:encode(Payload),
+        Headers = [
+            {"content-type", "application/json"}
+        ],
+        case wade:request(post, Endpoint, Headers, JsonPayload) of
+            {ok, 200, _RespHeaders, Body} ->
+                parse_ollama_response(Body);
+            {ok, StatusCode, _RespHeaders, Body} ->
+                {error, {ollama_error, StatusCode, Body}};
+            {error, Reason} ->
+                {error, {request_failed, Reason}}
+        end
+    catch
+        Error:Reason1 ->
+            {error, {encode_error, Error, Reason1}}
     end.
 
 %% Parse JSON response from Ollama API.
 parse_ollama_response(Body) ->
     try
-        Json = jsx:decode(list_to_binary(Body)),
+        BodyBinary = ensure_binary(Body),
+        Json = jsone:decode(BodyBinary),
         case maps:get(<<"response">>, Json, undefined) of
             undefined ->
                 case maps:get(<<"message">>, Json, undefined) of
