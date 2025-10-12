@@ -15,22 +15,6 @@ A simple and flexible Erlang library for interacting with the Ollama API. This l
 - 📝 **Well Documented** - Complete type specifications and documentation
 - 🔧 **Environment Variables** - Easy configuration through environment variables
 
-## Installation
-
-Add `ollama_handler` to your `rebar.config` dependencies:
-
-```erlang
-{deps, [
-    {ollama_handler, "1.0.0"}
-]}.
-```
-
-Then run:
-
-```bash
-rebar3 deps
-```
-
 ## Prerequisites
 
 - Erlang/OTP 24 or higher
