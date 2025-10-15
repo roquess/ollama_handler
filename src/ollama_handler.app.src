@@ -1,6 +1,6 @@
 {application, ollama_handler, [
     {description, "A simple and flexible Erlang library for interacting with Ollama API"},
-    {vsn, "0.1.1"},
+    {vsn, "0.1.2"},
     {registered, []},
     {applications, [
         kernel,
