@@ -331,7 +331,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 - [Ollama](https://ollama.ai/) for providing the excellent local LLM platform
 - The Erlang/OTP team for the robust runtime system
-- [jsx](https://github.com/talentdeficit/jsx) for JSON encoding/decoding
 
 
 
